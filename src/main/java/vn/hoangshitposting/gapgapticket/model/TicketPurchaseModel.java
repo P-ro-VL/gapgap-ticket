@@ -15,18 +15,16 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "tickets")
-public class TicketModel {
-
+@Table(name = "ticket_purchases")
+public class TicketPurchaseModel {
     @Id
     private UUID id;
 
-    private String name; // EARLY_BIRD, STANDARD
+    private UUID ticketId;
 
-    private long openTime;
+    private String paymentInfo;
 
-    private int totalQuantity;
+    private int quantity;
 
-    private int remainingQuantity;
-
+    private long purchasedAt;
 }

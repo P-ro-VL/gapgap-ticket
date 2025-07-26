@@ -1,8 +1,6 @@
 package vn.hoangshitposting.gapgapticket.api;
 
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.ConstraintViolationException;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.ConversionNotSupportedException;
@@ -15,7 +13,6 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.util.MimeType;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.ErrorResponseException;
@@ -60,7 +57,6 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         return super.handleExceptionInternal(ex, body, headers, statusCode, request);
     }
 
-    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "405", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class)))
     @Override
     protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException ex,
             HttpHeaders headers, HttpStatusCode status, WebRequest request) {
@@ -71,7 +67,6 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         return responseEntity(ErrorCode.METHOD_NOT_ALLOWED, status, msg, ex);
     }
 
-    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "415", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class)))
     @Override
     protected ResponseEntity<Object> handleHttpMediaTypeNotSupported(HttpMediaTypeNotSupportedException ex,
             HttpHeaders headers, HttpStatusCode status, WebRequest request) {
@@ -84,7 +79,6 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         return responseEntity(ErrorCode.UNSUPPORTED_MEDIA_TYPE, status, msg, ex);
     }
 
-    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "406", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class)))
     @Override
     protected ResponseEntity<Object> handleHttpMediaTypeNotAcceptable(HttpMediaTypeNotAcceptableException ex,
             HttpHeaders headers, HttpStatusCode status, WebRequest request) {
@@ -96,7 +90,6 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         return responseEntity(ErrorCode.NOT_ACCEPTABLE, status, msg, ex);
     }
 
-    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "500", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class)))
     @Override
     protected ResponseEntity<Object> handleMissingPathVariable(MissingPathVariableException ex, HttpHeaders headers,
             HttpStatusCode status, WebRequest request) {
@@ -108,7 +101,6 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         return responseEntity(ErrorCode.INTERNAL_ERR, status, msg, ex);
     }
 
-    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class)))
     @Override
     protected ResponseEntity<Object> handleMissingServletRequestParameter(MissingServletRequestParameterException ex,
             HttpHeaders headers, HttpStatusCode status, WebRequest request) {
@@ -116,7 +108,6 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         return responseEntity(ErrorCode.BAD_REQUEST, status, msg, ex);
     }
 
-    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class)))
     @Override
     protected ResponseEntity<Object> handleMissingServletRequestPart(MissingServletRequestPartException ex,
             HttpHeaders headers, HttpStatusCode status, WebRequest request) {
@@ -124,7 +115,6 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         return responseEntity(ErrorCode.BAD_REQUEST, status, msg, ex);
     }
 
-    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class)))
     @Override
     protected ResponseEntity<Object> handleServletRequestBindingException(ServletRequestBindingException ex,
             HttpHeaders headers, HttpStatusCode status, WebRequest request) {
@@ -149,7 +139,6 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     // @ResponseStatus(value = HttpStatus.NOT_FOUND)
-    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class)))
     @Override
     protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex, HttpHeaders headers,
             HttpStatusCode status, WebRequest request) {
@@ -157,7 +146,6 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         return responseEntity(ErrorCode.NOT_FOUND, status, msg, ex);
     }
 
-    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "503", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class)))
     @Override
     protected ResponseEntity<Object> handleAsyncRequestTimeoutException(AsyncRequestTimeoutException ex,
             HttpHeaders headers, HttpStatusCode status, WebRequest request) {
@@ -204,12 +192,6 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
             HttpHeaders headers, HttpStatusCode status, WebRequest request) {
         ex.printStackTrace();
         return responseEntity(ErrorCode.INTERNAL_ERR, status, "HttpMessageNotWritable", ex);
-    }
-
-    @ExceptionHandler(value = AuthenticationException.class)
-    public ResponseEntity<?> handleAuthException(AuthenticationException e) {
-        // e.printStackTrace();
-        return responseEntity(ErrorCode.UNAUTHORIZED, HttpStatus.UNAUTHORIZED, e.getMessage(), e);
     }
 
     @ExceptionHandler(value = Exception.class)

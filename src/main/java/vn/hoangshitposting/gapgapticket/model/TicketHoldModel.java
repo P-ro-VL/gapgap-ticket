@@ -10,23 +10,21 @@ import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
-@Data
 @Builder
-@AllArgsConstructor
+@Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
-@Table(name = "tickets")
-public class TicketModel {
-
+@Table(name = "ticket_holds")
+public class TicketHoldModel {
     @Id
     private UUID id;
 
-    private String name; // EARLY_BIRD, STANDARD
+    private UUID ticketId;
 
-    private long openTime;
+    private int quantity;
 
-    private int totalQuantity;
+    private long heldAt;
 
-    private int remainingQuantity;
-
+    private boolean confirmed;
 }
