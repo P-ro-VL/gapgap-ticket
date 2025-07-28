@@ -54,7 +54,7 @@ public class TicketService {
             throw new ApiCallException("Chỉ có thể mua tối đa " + ticketType.getMaxPerHold() + " vé đối với vé " + ticketType.getName(), HttpStatus.BAD_REQUEST);
         }
 
-        LocalDateTime openTime = LocalDateTime.ofInstant(new Date(ticketType.getOpenTime()).toInstant(), ZoneId.systemDefault());
+        LocalDateTime openTime = LocalDateTime.ofInstant(new Date(ticketType.getOpenTime()).toInstant(), ZoneId.of("GMT+7"));
         if (LocalDateTime.now().isBefore(openTime)) {
             throw new ApiCallException("Vé chưa mở bán hoặc đã kết thúc đợt bán vé", HttpStatus.BAD_REQUEST);
         }
