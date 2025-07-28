@@ -20,10 +20,7 @@ import vn.hoangshitposting.gapgapticket.repository.TicketModelRepository;
 import vn.hoangshitposting.gapgapticket.repository.TicketPurchaseModelRepository;
 
 import java.text.SimpleDateFormat;
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneId;
+import java.time.*;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
@@ -54,8 +51,12 @@ public class TicketService {
             throw new ApiCallException("Chỉ có thể mua tối đa " + ticketType.getMaxPerHold() + " vé đối với vé " + ticketType.getName(), HttpStatus.BAD_REQUEST);
         }
 
-        LocalDateTime openTime = LocalDateTime.ofInstant(new Date(ticketType.getOpenTime()).toInstant(), ZoneId.of("GMT+7"));
-        if (LocalDateTime.now().isBefore(openTime)) {
+        ZoneId zoneId = ZoneId.of("Asia/Bangkok"); // GMT+7
+        LocalDateTime openTime = Instant.ofEpochMilli(ticketType.getOpenTime())
+                .atZone(zoneId)
+                .toLocalDateTime();
+
+        if (LocalDateTime.now(zoneId).isBefore(openTime)) {
             throw new ApiCallException("Vé chưa mở bán hoặc đã kết thúc đợt bán vé", HttpStatus.BAD_REQUEST);
         }
 
