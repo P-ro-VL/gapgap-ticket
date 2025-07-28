@@ -1,12 +1,11 @@
 package vn.hoangshitposting.gapgapticket.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import vn.hoangshitposting.gapgapticket.model.converter.TimestampToLongConverter;
 
 import java.util.UUID;
 
@@ -22,9 +21,13 @@ public class TicketPurchaseModel {
 
     private UUID ticketId;
 
+    @Column(name = "paymentInfo", length = Integer.MAX_VALUE)
     private String paymentInfo;
 
     private int quantity;
 
+    @Convert(converter = TimestampToLongConverter.class)
     private long purchasedAt;
+
+    private String code;
 }
