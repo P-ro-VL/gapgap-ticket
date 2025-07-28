@@ -1,0 +1,61 @@
+package vn.hoangshitposting.gapgapticket.service;
+
+import com.google.api.services.sheets.v4.Sheets;
+import com.google.api.services.sheets.v4.SheetsScopes;
+import com.google.api.services.sheets.v4.model.AppendValuesResponse;
+import com.google.api.services.sheets.v4.model.Sheet;
+import com.google.api.services.sheets.v4.model.ValueRange;
+import com.google.auth.http.HttpCredentialsAdapter;
+import com.google.auth.oauth2.GoogleCredentials;
+import com.google.auth.oauth2.ServiceAccountCredentials;
+import org.springframework.stereotype.Service;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.security.GeneralSecurityException;
+import java.util.Arrays;
+import java.util.List;
+
+@Service
+public class GoogleSheetService {
+
+    private static final String APPLICATION_NAME = "Spring Sheets API";
+    private static final String SPREADSHEET_ID = "1D-LIdRIvcGN2R4sti-fCSp7tKcSBkXCTQnvmnXOWaCk";
+
+    public static Sheets getSheetsService() throws IOException, GeneralSecurityException {
+        GoogleCredentials credentials = ServiceAccountCredentials
+                .fromStream(new FileInputStream("service-account.json"))
+                .createScoped(Arrays.asList(SheetsScopes.SPREADSHEETS));
+
+        return new Sheets.Builder(
+                com.google.api.client.googleapis.javanet.GoogleNetHttpTransport.newTrustedTransport(),
+                com.google.api.client.json.gson.GsonFactory.getDefaultInstance(),
+                new HttpCredentialsAdapter(credentials))
+                .setApplicationName(APPLICATION_NAME)
+                .build();
+    }
+
+    public void appendRow(List<Object> rowData) throws IOException, GeneralSecurityException {
+        Sheets sheetsService = getSheetsService();
+
+        String range = "Sheet1!A:A"; // Check column A (or the whole sheet)
+        ValueRange response = sheetsService.spreadsheets().values()
+                .get(SPREADSHEET_ID, range)
+                .execute();
+
+        rowData.add(response.values().size());
+
+        ValueRange body = new ValueRange()
+                .setValues(List.of(rowData)); // Single row
+
+        AppendValuesResponse result = sheetsService.spreadsheets().values()
+                .append(SPREADSHEET_ID, "Sheet1!A1", body)
+                .setValueInputOption("RAW")
+                .setInsertDataOption("INSERT_ROWS")
+                .execute();
+
+        System.out.println("Row inserted: " + result.getUpdates().getUpdatedRange());
+    }
+
+
+}

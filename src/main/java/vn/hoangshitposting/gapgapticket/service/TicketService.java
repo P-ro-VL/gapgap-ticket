@@ -44,6 +44,7 @@ public class TicketService {
     private static final SimpleDateFormat CODE_TIME_FORMAT = new SimpleDateFormat("HHmmssddMMyyyy");
 
     private final TicketHoldModelRepository ticketHoldModelRepository;
+    private final GoogleSheetService googleSheetService;
 
     public UUID holdTickets(TicketHoldRequest request) throws ApiCallException {
         TicketModel ticketType = ticketModelRepository.findById(request.getTicketId())
@@ -169,6 +170,25 @@ public class TicketService {
                 request.getEmail(),
                 sendEmailRequest
         );
+
+        try {
+            googleSheetService.appendRow(
+                    new ArrayList<>(List.of(
+                            request.getName(),
+                            ticket.getName(),
+                            holdInfo.getQuantity(),
+                            ticket.getPrice() * holdInfo.getQuantity(),
+                            request.getEmail(),
+                            request.getPhoneNumber(),
+                            now,
+                            request.getProof()
+                    ))
+            );
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            System.out.println("CANNOT RECORD PURCHASE HISTORY TO GOOGLE SHEET");
+            System.out.println(request.getName() + " - " + holdInfo.getQuantity() + " tickets - " + ticket.getName() + " - " + now);
+        }
     }
 
     public TicketHoldResponse getHoldInfo(String holdId) throws ApiCallException {
