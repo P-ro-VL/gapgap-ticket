@@ -167,29 +167,31 @@ public class TicketService {
         holdInfo.setConfirmed(true);
         ticketHoldModelRepository.save(holdInfo);
 
-        EmailService.sendHtmlEmail(
-                request.getEmail(),
-                sendEmailRequest
-        );
-
-        try {
-            googleSheetService.appendRow(
-                    new ArrayList<>(List.of(
-                            request.getName(),
-                            ticket.getName(),
-                            holdInfo.getQuantity(),
-                            ticket.getPrice() * holdInfo.getQuantity(),
-                            request.getEmail(),
-                            request.getPhoneNumber(),
-                            now,
-                            request.getProof()
-                    ))
+        new Thread(() -> {
+            EmailService.sendHtmlEmail(
+                    request.getEmail(),
+                    sendEmailRequest
             );
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            System.out.println("CANNOT RECORD PURCHASE HISTORY TO GOOGLE SHEET");
-            System.out.println(request.getName() + " - " + holdInfo.getQuantity() + " tickets - " + ticket.getName() + " - " + now);
-        }
+
+            try {
+                googleSheetService.appendRow(
+                        new ArrayList<>(List.of(
+                                request.getName(),
+                                ticket.getName(),
+                                holdInfo.getQuantity(),
+                                ticket.getPrice() * holdInfo.getQuantity(),
+                                request.getEmail(),
+                                request.getPhoneNumber(),
+                                now,
+                                request.getProof()
+                        ))
+                );
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                System.out.println("CANNOT RECORD PURCHASE HISTORY TO GOOGLE SHEET");
+                System.out.println(request.getName() + " - " + holdInfo.getQuantity() + " tickets - " + ticket.getName() + " - " + now);
+            }
+        }).start();
     }
 
     public TicketHoldResponse getHoldInfo(String holdId) throws ApiCallException {
