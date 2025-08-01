@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td,
+        th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+    </style>
+</head>
+<body>
+<img src='cid:headerImage' style='width:100%; max-width:800px; margin-bottom: 16px;'>
+<br/>
+<span class="display: flex">
+                  Cảm ơn
+                  <span style="color: red; font-weight: bold">{name}</span>
+                </span>
+<p>
+    Bạn đặt vé tham gia Cover Show “Có Cần Phải Có Lý Không?” thành công rồi
+    nha. Chúng mình xin phép gửi lại thông tin vé tham dự:
+</p>
+<p style="font-weight: bold; color: black; margin-bottom: 8px">
+    Thông tin đặt hàng:
+</p>
+<p style="font-weight: bold; color: orange; margin: 0; font-style: italic">
+    Họ và tên:
+
+    <span style="color: black">{name}</span>
+</p>
+<p style="font-weight: bold; color: orange; margin: 0; font-style: italic">
+    Số điện thoại:
+
+    <span style="color: black">{phone}</span>
+</p>
+<p style="font-weight: bold; color: orange; margin: 0; font-style: italic">
+    Email:
+
+    <span style="color: black">{email}</span>
+</p>
+<p
+        style="
+                    font-weight: bold;
+                    color: orange;
+                    margin: 0 0 16px 0;
+                    font-style: italic;
+                  "
+>
+    Số lượng vé:
+
+    <span style="color: black">{ticketName} - {amount} vé</span>
+</p>
+
+<table style="width: 100%;">
+    <tr>
+        <th style="width: 33%;">Loại vé</th>
+        <th style="width: 33%;">Mã đơn hàng</th>
+        <th style="width: 33%;">QR</th>
+    </tr>
+    {rows}
+</table>
+
+<p style="font-weight: bold">
+    Một số lưu ý về quy định đổi/trả:
+<ul style="list-style-type: '-     ';">
+    <li>
+        Chương trình không áp dụng đổi/trả sau khi đã xác nhận thanh toán thành công vì bất kỳ lý do gì. Mọi thắc mắc, xin hãy trao đổi trực tiếp với chúng tớ qua Email và Fanpage Hoangshitposting nha
+    </li>
+</ul>
+</p>
+
+<p style="margin-top: 20px">
+    🐟 Cover Show "CÓ CẦN PHẢI CÓ LÝ KHÔNG?" <br />
+    ► Thời gian: 19h - 22h 13/09/2025 <br />
+    ► Địa điểm: Golden Birds - 142 Trần Não, Quận 2, TP. Hồ Chí Minh<br />
+</p>
+
+<hr style="background-color: #BDC1C6;"/>
+
+<p style="font-weight: bold;">
+    Hoang Shitposting<br/>
+    Liên hệ:<br/>
+    <span style="font-weight: 500 !important;">
+                        - Fanpage: <a href="https://www.facebook.com/hoangshitposting">Hoangshitposting</a><br/>
+                        - Email: <a href="mailto:hoangshitposting@gmail.com">hoangshitposting@gmail.com</a><br/>
+                        - Hotline: <span style="color: black;">0968023065 (Hải Yến)</span>
+                    </span>
+</p>
+</body>
+</html>

@@ -28,14 +28,14 @@ public class EmailService {
                     border-collapse: collapse;
                     width: 100%;
                   }
-                        
+                       \s
                   td,
                   th {
                     border: 1px solid #dddddd;
                     text-align: left;
                     padding: 8px;
                   }
-                        
+                       \s
                   tr:nth-child(even) {
                     background-color: #dddddd;
                   }
@@ -48,26 +48,28 @@ public class EmailService {
                   Cảm ơn
                   <span style="color: red; font-weight: bold">{name}</span>
                 </span>
-                <p>
-                  Bạn đặt vé tham gia Cover Show “Có Cần Phải Có Lý Không?” thành công rồi
-                  nha. Chúng mình xin phép gửi lại thông tin vé tham dự:
-                </p>
-                <p style="font-weight: bold; color: black; margin-bottom: 8px">
-                  Thông tin đặt hàng:
+                <p style="margin-bottom: 0">
+                  Cảm ơn bạn đã đặt vé tham gia Cover Show "CÓ CẦN PHẢI CÓ LÝ KHÔNG?" SÀI GÒN. Chúng mình sẽ tiến hành xác nhận thanh toán và gửi vé đến bạn trong vòng 48 giờ kể từ khi nhận được thanh toán thành công.<br/><br/>
+                  Đây là thông tin đơn hàng của bạn. Bạn kiểm tra kĩ và phản hồi lại chúng mình nếu có sai sót nhé^^
                 </p>
                 <p style="font-weight: bold; color: orange; margin: 0; font-style: italic">
                   Họ và tên:
-                        
+                       \s
                   <span style="color: black">{name}</span>
                 </p>
                 <p style="font-weight: bold; color: orange; margin: 0; font-style: italic">
                   Số điện thoại:
-                        
+                       \s
                   <span style="color: black">{phone}</span>
                 </p>
                 <p style="font-weight: bold; color: orange; margin: 0; font-style: italic">
                   Email:
-                        
+                       \s
+                  <span style="color: black">{email}</span>
+                </p>
+                <p style="font-weight: bold; color: orange; margin: 0; font-style: italic">
+                  Số lượng vé:
+                       \s
                   <span style="color: black">{email}</span>
                 </p>
                 <p
@@ -78,20 +80,11 @@ public class EmailService {
                     font-style: italic;
                   "
                 >
-                  Số lượng vé:
-                        
-                  <span style="color: black">{ticketName} - {amount} vé</span>
+                  Tổng giá trị đơn hàng:
+                       \s
+                  <span style="color: black">{totalPrice}</span>
                 </p>
-                        
-                <table style="width: 100%;">
-                  <tr>
-                    <th style="width: 33%;">Loại vé</th>
-                    <th style="width: 33%;">Mã đơn hàng</th>
-                    <th style="width: 33%;">QR</th>
-                  </tr>
-                  {rows}
-                </table>
-                        
+                       \s
                 <p style="font-weight: bold">
                   Một số lưu ý về quy định đổi/trả:
                   <ul style="list-style-type: '-     ';">
@@ -100,15 +93,15 @@ public class EmailService {
                     </li>
                   </ul>
                 </p>
-                        
+                       \s
                 <p style="margin-top: 20px">
                   🐟 Cover Show "CÓ CẦN PHẢI CÓ LÝ KHÔNG?" <br />
                   ► Thời gian: 19h - 22h 13/09/2025 <br />
-                  ► Địa điểm: Golden Birds - 142 Trần Não, Quận 2, TP. Hồ Chí Minh<br />
+                  ► Địa điểm: Golden Bird's Event Space - 142 Đường Trần Não, Phường Bình An, Quận 2, Thành phố Thủ Đức, Hồ Chí Minh<br /><br/>Nghe nhạc Cá Hồi Hoang và đợi chúng mình nha 🐟🐟🐟
                 </p>
-                        
+                       \s
                 <hr style="background-color: #BDC1C6;"/>
-                        
+                       \s
                 <p style="font-weight: bold;">
                     Hoang Shitposting<br/>
                     Liên hệ:<br/>
@@ -156,6 +149,8 @@ public class EmailService {
             content = content.replaceAll("\\{phone\\}", request.getPurchaseRequest().getPhoneNumber());
             content = content.replaceAll("\\{ticketName\\}", request.getTicket().getName());
             content = content.replaceAll("\\{amount\\}", request.getAmount() + "");
+            content = content.replaceAll("\\{totalPrice\\}", (request.getAmount() * request.getTicket().getPrice()) + "");
+
 
             String rowTemplate = """
                     <tr>
