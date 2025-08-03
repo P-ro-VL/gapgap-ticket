@@ -139,7 +139,9 @@ public class EmailService {
             content = content.replaceAll("\\{email\\}", request.getEmail());
             content = content.replaceAll("\\{phone\\}", request.getPhoneNumber());
             content = content.replaceAll("\\{address\\}", request.getAddress());
-            content = content.replaceAll("\\{shippingFee\\}", request.getShippingFee() + "");
+            content = content.replaceAll("\\{shippingFee\\}", formatVND(request.getShippingFee()));
+
+            int total = request.getShippingFee();
 
             String rowTemplate = """
                     <tr>
@@ -158,9 +160,12 @@ public class EmailService {
                         .replaceAll("\\{price\\}", formatVND(merch.getPrice() * merch.getAmount()))
                         .replaceAll("\\{amount\\}", merch.getAmount() + "")
                 );
+
+                total += merch.getAmount() * merch.getPrice();
             }
 
             content = content.replaceAll("\\{rows\\}", row.toString());
+            content = content.replaceAll("\\{total\\}", formatVND(total));
 
             // Create the multipart email
             MimeMultipart multipart = new MimeMultipart("related");
