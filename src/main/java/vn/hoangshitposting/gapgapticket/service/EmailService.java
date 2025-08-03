@@ -134,7 +134,7 @@ public class EmailService {
             message.setSubject("Merch “Có Cần Phải Có Lý Không?” xác nhận thông tin Pre-order!”");
 
             // Set HTML content
-            String content = Files.readString(Path.of("confirm_ticket.html"));
+            String content = Files.readString(Path.of("confirm_merch.html"));
             content = content.replaceAll("\\{name\\}", request.getFullName());
             content = content.replaceAll("\\{email\\}", request.getEmail());
             content = content.replaceAll("\\{phone\\}", request.getPhoneNumber());
