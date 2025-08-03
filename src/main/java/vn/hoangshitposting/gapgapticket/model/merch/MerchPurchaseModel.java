@@ -1,9 +1,6 @@
 package vn.hoangshitposting.gapgapticket.model.merch;
 
-import jakarta.persistence.Convert;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -31,14 +28,9 @@ public class MerchPurchaseModel {
 
     String address;
 
-    String ward;
-
-    String province;
-
-    String shippingBrand;
-
     int shippingFee;
 
+    @Column(name = "proof", length = Integer.MAX_VALUE)
     String proof;
 
     @Convert(converter = TimestampToLongConverter.class)
