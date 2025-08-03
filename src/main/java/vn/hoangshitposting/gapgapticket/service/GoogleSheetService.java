@@ -8,6 +8,7 @@ import com.google.api.services.sheets.v4.model.ValueRange;
 import com.google.auth.http.HttpCredentialsAdapter;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.auth.oauth2.ServiceAccountCredentials;
+import lombok.Getter;
 import org.springframework.stereotype.Service;
 
 import java.io.FileInputStream;
@@ -36,12 +37,12 @@ public class GoogleSheetService {
                 .build();
     }
 
-    public void appendRow(List<Object> rowData) throws IOException, GeneralSecurityException {
+    public void appendRow(SpreadSheet sheet, List<Object> rowData) throws IOException, GeneralSecurityException {
         Sheets sheetsService = getSheetsService();
 
         String range = "Sheet1!A:A"; // Check column A (or the whole sheet)
         ValueRange response = sheetsService.spreadsheets().values()
-                .get(SPREADSHEET_ID, range)
+                .get(sheet.getId(), range)
                 .execute();
 
         LinkedList<Object> linkedList = new LinkedList<>(rowData);
@@ -57,6 +58,19 @@ public class GoogleSheetService {
                 .execute();
 
         System.out.println("Row inserted: " + result.getUpdates().getUpdatedRange());
+    }
+
+    @Getter
+    public static enum SpreadSheet {
+        TICKET("1D-LIdRIvcGN2R4sti-fCSp7tKcSBkXCTQnvmnXOWaCk"),
+
+        GALLERY("1hpRtu4etGMsl_pYzwH9W7xf0EZbjM_GVMhsWxb2Hiwo");
+
+        String id;
+
+        private SpreadSheet(String id) {
+            this.id = id;
+        }
     }
 
 

@@ -168,13 +168,14 @@ public class TicketService {
         ticketHoldModelRepository.save(holdInfo);
 
         new Thread(() -> {
-            EmailService.sendHtmlEmail(
+            EmailService.sendConfirmTicketEmail(
                     request.getEmail(),
                     sendEmailRequest
             );
 
             try {
                 googleSheetService.appendRow(
+                        GoogleSheetService.SpreadSheet.TICKET,
                         new ArrayList<>(List.of(
                                 request.getName(),
                                 ticket.getName(),
@@ -187,7 +188,6 @@ public class TicketService {
                         ))
                 );
             } catch (Exception ex) {
-                ex.printStackTrace();
                 System.out.println("CANNOT RECORD PURCHASE HISTORY TO GOOGLE SHEET");
                 System.out.println(request.getName() + " - " + holdInfo.getQuantity() + " tickets - " + ticket.getName() + " - " + now);
             }
