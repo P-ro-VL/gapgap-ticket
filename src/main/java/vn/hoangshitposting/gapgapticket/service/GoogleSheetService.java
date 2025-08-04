@@ -40,7 +40,7 @@ public class GoogleSheetService {
     public void appendRow(SpreadSheet sheet, List<Object> rowData) throws IOException, GeneralSecurityException {
         Sheets sheetsService = getSheetsService();
 
-        String range = "Sheet1!A:A"; // Check column A (or the whole sheet)
+        String range = "Sheet1!A:A";
         ValueRange response = sheetsService.spreadsheets().values()
                 .get(sheet.getId(), range)
                 .execute();
@@ -57,7 +57,7 @@ public class GoogleSheetService {
                 .setInsertDataOption("INSERT_ROWS")
                 .execute();
 
-        System.out.println("Row inserted: " + result.getUpdates().getUpdatedRange());
+        System.out.println("Row inserted: " + result.getUpdates().getUpdatedRange() + " " + sheet.getId());
     }
 
     @Getter

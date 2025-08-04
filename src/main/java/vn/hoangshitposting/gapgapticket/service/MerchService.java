@@ -66,7 +66,6 @@ public class MerchService {
                                     request.getPhoneNumber(),
                                     request.getAddress(),
                                     request.getShippingFee(),
-                                    request.getProof(),
                                     merch.getName(),
                                     merch.getAmount(),
                                     merch.getMetadata().getOrDefault("color", ""),

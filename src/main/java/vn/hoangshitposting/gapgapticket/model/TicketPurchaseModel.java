@@ -24,6 +24,9 @@ public class TicketPurchaseModel {
     @Column(name = "paymentInfo", length = Integer.MAX_VALUE)
     private String paymentInfo;
 
+    @Column(name = "paymentInfo", length = Integer.MAX_VALUE)
+    private String proof;
+
     private int quantity;
 
     @Convert(converter = TimestampToLongConverter.class)

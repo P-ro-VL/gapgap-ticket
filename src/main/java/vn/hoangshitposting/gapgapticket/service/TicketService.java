@@ -142,7 +142,6 @@ public class TicketService {
         String paymentInfo = String.join("{br}", List.of(
                 request.getName(),
                 request.getEmail(),
-                request.getProof(),
                 request.getPhoneNumber()
         ));
 
@@ -155,6 +154,7 @@ public class TicketService {
                             .id(UUID.randomUUID())
                             .purchasedAt(now)
                             .paymentInfo(paymentInfo)
+                            .proof(request.getProof())
                             .quantity(1)
                             .ticketId(holdInfo.getTicketId())
                             .code(code)
@@ -177,14 +177,14 @@ public class TicketService {
                 googleSheetService.appendRow(
                         GoogleSheetService.SpreadSheet.TICKET,
                         new ArrayList<>(List.of(
+                                UUID.randomUUID(),
                                 request.getName(),
                                 ticket.getName(),
                                 holdInfo.getQuantity(),
                                 ticket.getPrice() * holdInfo.getQuantity(),
                                 request.getEmail(),
                                 request.getPhoneNumber(),
-                                now,
-                                request.getProof()
+                                now
                         ))
                 );
             } catch (Exception ex) {
