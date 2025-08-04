@@ -51,16 +51,16 @@ public class EmailService {
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress("hoangshitposting@gmail.com"));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
-            message.setSubject("Đặt vé thành công Cover Show “Có cần phải có lý không?”");
+            message.setSubject("Đặt vé thành công Cover Show “Có cần phải có lý không?” Sài Gòn");
 
             // Set HTML content
             String content = Files.readString(Path.of("confirm_ticket.html"));
             content = content.replaceAll("\\{name\\}", request.getPurchaseRequest().getName());
             content = content.replaceAll("\\{email\\}", request.getPurchaseRequest().getEmail());
             content = content.replaceAll("\\{phone\\}", request.getPurchaseRequest().getPhoneNumber());
-            content = content.replaceAll("\\{ticketName\\}", request.getTicket().getName());
+            content = content.replaceAll("\\{ticketName\\}", request.getTicket().getName().toUpperCase());
             content = content.replaceAll("\\{amount\\}", request.getAmount() + "");
-            content = content.replaceAll("\\{totalPrice\\}", (request.getAmount() * request.getTicket().getPrice()) + "");
+            content = content.replaceAll("\\{totalPrice\\}", formatVND(request.getAmount() * request.getTicket().getPrice()));
 
 
             String rowTemplate = """
