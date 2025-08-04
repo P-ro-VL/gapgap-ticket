@@ -146,8 +146,9 @@ public class TicketService {
         ));
 
         long now = System.currentTimeMillis();
+        String id = CODE_TIME_FORMAT.format(now);
         for(int i = 1; i <= holdInfo.getQuantity(); i++) {
-            String code = "SG" + CODE_TIME_FORMAT.format(now) + i;
+            String code = "SG" + id + i;
             // Persist the purchase
             TicketPurchaseModel purchaseModel = ticketPurchaseModelRepository.save(
                     TicketPurchaseModel.builder()
@@ -177,9 +178,9 @@ public class TicketService {
                 googleSheetService.appendRow(
                         GoogleSheetService.SpreadSheet.TICKET,
                         new ArrayList<>(List.of(
-                                UUID.randomUUID(),
+                                id,
                                 request.getName(),
-                                ticket.getName(),
+                                ticket.getName().toUpperCase(),
                                 holdInfo.getQuantity(),
                                 ticket.getPrice() * holdInfo.getQuantity(),
                                 request.getEmail(),
