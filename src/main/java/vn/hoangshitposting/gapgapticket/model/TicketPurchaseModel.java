@@ -24,7 +24,7 @@ public class TicketPurchaseModel {
     @Column(name = "paymentInfo", length = Integer.MAX_VALUE)
     private String paymentInfo;
 
-    @Column(name = "paymentInfo", length = Integer.MAX_VALUE)
+    @Column(name = "proof", length = Integer.MAX_VALUE)
     private String proof;
 
     private int quantity;
