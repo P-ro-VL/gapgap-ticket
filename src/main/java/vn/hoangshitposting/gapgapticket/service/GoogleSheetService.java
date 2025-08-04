@@ -22,7 +22,6 @@ import java.util.List;
 public class GoogleSheetService {
 
     private static final String APPLICATION_NAME = "Spring Sheets API";
-    private static final String SPREADSHEET_ID = "1D-LIdRIvcGN2R4sti-fCSp7tKcSBkXCTQnvmnXOWaCk";
 
     public static Sheets getSheetsService() throws IOException, GeneralSecurityException {
         GoogleCredentials credentials = ServiceAccountCredentials
@@ -40,19 +39,12 @@ public class GoogleSheetService {
     public void appendRow(SpreadSheet sheet, List<Object> rowData) throws IOException, GeneralSecurityException {
         Sheets sheetsService = getSheetsService();
 
-        String range = "Sheet1!A:A";
-        ValueRange response = sheetsService.spreadsheets().values()
-                .get(sheet.getId(), range)
-                .execute();
-
         LinkedList<Object> linkedList = new LinkedList<>(rowData);
-        linkedList.addFirst(response.values().size());
-
         ValueRange body = new ValueRange()
                 .setValues(List.of(linkedList)); // Single row
 
         AppendValuesResponse result = sheetsService.spreadsheets().values()
-                .append(SPREADSHEET_ID, "Sheet1!A1", body)
+                .append(sheet.getId(), "Sheet1!A1", body)
                 .setValueInputOption("RAW")
                 .setInsertDataOption("INSERT_ROWS")
                 .execute();
