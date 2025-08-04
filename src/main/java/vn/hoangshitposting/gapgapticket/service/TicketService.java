@@ -3,6 +3,7 @@ package vn.hoangshitposting.gapgapticket.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -237,7 +238,8 @@ public class TicketService {
         ).collect(Collectors.toList());
     }
 
-    @Scheduled(fixedRate = 1, timeUnit = TimeUnit.SECONDS)
+    @Async
+    @Scheduled(fixedRate = 10, timeUnit = TimeUnit.SECONDS)
     public void removeExpiredHoldTickets() {
         List<TicketHoldModel> holds = ticketHoldModelRepository.findAll();
         long now = System.currentTimeMillis();
