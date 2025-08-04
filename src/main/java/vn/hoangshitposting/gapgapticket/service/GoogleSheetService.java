@@ -64,6 +64,8 @@ public class GoogleSheetService {
     public static enum SpreadSheet {
         TICKET("1D-LIdRIvcGN2R4sti-fCSp7tKcSBkXCTQnvmnXOWaCk"),
 
+        MERCH("1OVfjL-hhK3Lihoev9araFSCH5Vowakfwa6_9ccWmTYQ"),
+
         GALLERY("1hpRtu4etGMsl_pYzwH9W7xf0EZbjM_GVMhsWxb2Hiwo");
 
         String id;

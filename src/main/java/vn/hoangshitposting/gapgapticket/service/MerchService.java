@@ -3,12 +3,15 @@ package vn.hoangshitposting.gapgapticket.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import vn.hoangshitposting.gapgapticket.dto.request.BuyMerchRequest;
+import vn.hoangshitposting.gapgapticket.dto.request.MerchMetaRequest;
 import vn.hoangshitposting.gapgapticket.dto.response.MerchPaymentResponse;
 import vn.hoangshitposting.gapgapticket.dto.response.MerchResponse;
 import vn.hoangshitposting.gapgapticket.model.merch.MerchPurchaseModel;
 import vn.hoangshitposting.gapgapticket.repository.MerchModelRepository;
 import vn.hoangshitposting.gapgapticket.repository.MerchPurchaseModelRepository;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -19,6 +22,8 @@ public class MerchService {
 
     final MerchModelRepository merchModelRepository;
     final MerchPurchaseModelRepository merchPurchaseModelRepository;
+
+    final GoogleSheetService googleSheetService;
 
     public List<MerchResponse> getAllMerch() {
         return merchModelRepository.findAll().stream().map(
@@ -50,6 +55,33 @@ public class MerchService {
 
         new Thread(() -> {
             EmailService.sendConfirmMerchEmail(request.getEmail(), request);
+
+            try {
+                for(MerchMetaRequest merch : request.getMerches()) {
+                    googleSheetService.appendRow(
+                            GoogleSheetService.SpreadSheet.MERCH,
+                            List.of(
+                                    request.getEmail(),
+                                    request.getFullName(),
+                                    request.getPhoneNumber(),
+                                    request.getAddress(),
+                                    request.getShippingFee(),
+                                    request.getProof(),
+                                    merch.getName(),
+                                    merch.getAmount(),
+                                    merch.getMetadata().getOrDefault("color", ""),
+                                    merch.getMetadata().getOrDefault("size", ""),
+                                    merch.getPrice(),
+                                    merch.getPrice() * merch.getAmount(),
+                                    now
+                            )
+                    );
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            } catch (GeneralSecurityException e) {
+                throw new RuntimeException(e);
+            }
         }).start();
 
         return MerchPaymentResponse.builder()
