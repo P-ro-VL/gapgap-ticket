@@ -11,11 +11,14 @@ import vn.hoangshitposting.gapgapticket.api.ApiCallException;
 import vn.hoangshitposting.gapgapticket.dto.request.SendEmailRequest;
 import vn.hoangshitposting.gapgapticket.dto.request.TicketHoldRequest;
 import vn.hoangshitposting.gapgapticket.dto.request.TicketPurchaseRequest;
+import vn.hoangshitposting.gapgapticket.dto.response.TicketCheckInResponse;
 import vn.hoangshitposting.gapgapticket.dto.response.TicketHoldResponse;
 import vn.hoangshitposting.gapgapticket.dto.response.TicketResponse;
+import vn.hoangshitposting.gapgapticket.model.TicketCheckInModel;
 import vn.hoangshitposting.gapgapticket.model.TicketHoldModel;
 import vn.hoangshitposting.gapgapticket.model.TicketModel;
 import vn.hoangshitposting.gapgapticket.model.TicketPurchaseModel;
+import vn.hoangshitposting.gapgapticket.repository.TicketCheckInRepository;
 import vn.hoangshitposting.gapgapticket.repository.TicketHoldModelRepository;
 import vn.hoangshitposting.gapgapticket.repository.TicketModelRepository;
 import vn.hoangshitposting.gapgapticket.repository.TicketPurchaseModelRepository;
@@ -42,6 +45,7 @@ public class TicketService {
     private static final SimpleDateFormat CODE_TIME_FORMAT = new SimpleDateFormat("HHmmssddMMyyyy");
 
     private final TicketHoldModelRepository ticketHoldModelRepository;
+    private final TicketCheckInRepository ticketCheckInRepository;
     private final GoogleSheetService googleSheetService;
 
     public UUID holdTickets(TicketHoldRequest request) throws ApiCallException {
@@ -255,4 +259,45 @@ public class TicketService {
         }
     }
 
+    public TicketCheckInResponse checkIn(String code) throws ApiCallException {
+        Optional<TicketPurchaseModel> ticketPurchaseOpt = ticketPurchaseModelRepository.findByCode(code);
+
+        if(ticketPurchaseOpt.isEmpty()) throw new ApiCallException("Ticket is not valid", HttpStatus.NOT_FOUND);
+
+        TicketPurchaseModel ticketPurchaseModel = ticketPurchaseOpt.get();
+
+        Optional<TicketCheckInModel> ticketCheckInOpt = ticketCheckInRepository.findByCode(code);
+        if(ticketCheckInOpt.isPresent()) throw new ApiCallException("Already checked in", HttpStatus.BAD_REQUEST);
+
+        UUID checkInId = UUID.randomUUID();
+        TicketCheckInModel ticketCheckInModel = TicketCheckInModel.builder()
+                .id(checkInId)
+                .checkInAt(System.currentTimeMillis())
+                .code(code)
+                .build();
+        ticketCheckInRepository.save(ticketCheckInModel);
+
+        Optional<TicketModel> ticketOpt = ticketModelRepository.findById(ticketPurchaseModel.getTicketId());
+        TicketModel ticket = ticketOpt.get();
+
+        String[] paymentInfo = ticketPurchaseModel.getPaymentInfo().split("\\{br\\}");
+
+        return TicketCheckInResponse.builder()
+                .purchaseId(ticketPurchaseModel.getId())
+                .ticket(TicketResponse.builder()
+                        .id(ticket.getId())
+                        .name(ticket.getName())
+                        .openTime(ticket.getOpenTime())
+                        .soldOut(ticket.getRemainingQuantity() == 0)
+                        .maxTicketHold(ticket.getMaxPerHold())
+                        .price(ticket.getPrice())
+                        .build())
+                .checkInId(checkInId)
+                .quantity(ticketPurchaseModel.getQuantity())
+                .name(paymentInfo[0])
+                .email(paymentInfo[1])
+                .phoneNumber(paymentInfo[2])
+                .code(code)
+                .build();
+    }
 }
